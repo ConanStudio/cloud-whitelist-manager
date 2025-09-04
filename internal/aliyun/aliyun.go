@@ -157,6 +157,7 @@ func (c *Client) addIPToECSSecurityGroup(ip string, sg config.SecurityGroup) err
 	request.PortRange = portRange
 	request.SourceCidrIp = fmt.Sprintf("%s/32", ip)
 	request.Priority = fmt.Sprintf("%d", sg.Priority)
+	request.Description = "Auto added by cloud-whitelist-manager"
 
 	_, err := c.ecsClient.AuthorizeSecurityGroup(request)
 	return err
