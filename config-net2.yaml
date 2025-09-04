@@ -1,0 +1,46 @@
+# 网络2配置示例
+interval: 300  # 检查间隔（秒）
+
+# IP获取源配置（使用网卡方式获取当前容器IP）
+ip_source:
+  type: interface
+  interface: "eth0"
+  ipv6: false
+
+# 多账号配置
+accounts:
+- name: "production-account"
+  access_key_id: "your_access_key_id"
+  access_key_secret: "your_access_key_secret"
+  region_id: "cn-hangzhou"
+  
+  # ECS安全组配置
+  ecs:
+    enabled: true
+    security_groups:
+      - security_group_id: "sg-net2-web"
+        port: "80"
+        priority: 100
+      - security_group_id: "sg-net2-web"
+        port: "443"
+        priority: 101
+    
+  # RDS配置
+  rds:
+    enabled: true
+    instance_whitelists:
+      - instance_id: "rm-net2-mysql"
+        whitelist_name: "default"
+    
+  # Redis配置
+  redis:
+    enabled: true
+    instance_whitelists:
+      - instance_id: "r-net2-redis"
+        whitelist_name: "default"
+    
+  # CLB配置
+  clb:
+    enabled: true
+    load_balancer_whitelists:
+      - acl_id: "acl-net2-web"

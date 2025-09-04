@@ -1,0 +1,51 @@
+services:
+  cloud-whitelist-manager-net1:
+    build: .
+    container_name: cloud-whitelist-manager-net1
+    networks:
+      ipvlan-net1:
+        ipv4_address: 192.168.1.100  # 根据实际网络环境调整
+    volumes:
+      - ./config-net1.yaml:/app/config.yaml:ro
+    restart: unless-stopped
+    depends_on:
+      - init-ipvlan
+
+  cloud-whitelist-manager-net2:
+    build: .
+    container_name: cloud-whitelist-manager-net2
+    networks:
+      ipvlan-net2:
+        ipv4_address: 192.168.2.100  # 根据实际网络环境调整
+    volumes:
+      - ./config-net2.yaml:/app/config.yaml:ro
+    restart: unless-stopped
+    depends_on:
+      - init-ipvlan
+
+  # 初始化ipvlan网络的辅助服务
+  init-ipvlan:
+    image: alpine:latest
+    command: echo "Initializing ipvlan networks"
+    networks:
+      - ipvlan-net1
+      - ipvlan-net2
+
+# 定义ipvlan网络
+networks:
+  ipvlan-net1:
+    driver: ipvlan
+    driver_opts:
+      parent: eth0  # 根据实际网络接口调整
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24  # 根据实际网络环境调整
+          gateway: 192.168.1.1
+  ipvlan-net2:
+    driver: ipvlan
+    driver_opts:
+      parent: eth1  # 根据实际网络接口调整
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24  # 根据实际网络环境调整
+          gateway: 192.168.2.1

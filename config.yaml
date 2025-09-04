@@ -1,0 +1,135 @@
+# 基本配置
+interval: 120  # 检查间隔（秒）
+
+# IP获取源配置（选择其中一种方式）
+# HTTP方式获取IP
+ip_source:
+  type: http
+  url: "http://ipinfo.io/ip"
+  timeout: 10  # 超时时间（秒）
+  headers:     # 自定义请求头
+    User-Agent: "IP-Update-Tool"
+
+# 或者使用命令行方式获取IP
+#ip_source:
+#  type: command
+#  cmd: "curl -s ifconfig.me"
+#  timeout: 10  # 超时时间（秒）
+
+# 或者使用网卡方式获取IP（根据实际环境修改interface名称）
+#ip_source:
+#  type: interface
+#  interface: "eth0"  # 网络接口名称
+#  ipv6: false        # 是否使用IPv6
+
+# 阿里云配置（单账号配置，向后兼容）
+# 请将以下配置替换为您的实际阿里云凭证和资源信息
+# AccessKey获取方式：登录阿里云控制台 -> 右上角头像 -> AccessKey管理
+# 安全组ID获取方式：阿里云控制台 -> 云服务器ECS -> 网络与安全 -> 安全组
+# RDS实例ID获取方式：阿里云控制台 -> 云数据库RDS -> 实例列表
+# Redis实例ID获取方式：阿里云控制台 -> 云数据库Redis -> 实例列表
+# 区域ID获取方式：参考阿里云文档，如"cn-hangzhou"、"cn-beijing"等
+aliyun:
+ access_key_id: "YOUR_ACCESS_KEY_SECRET"  # 请替换为您的阿里云AccessKey ID
+ access_key_secret: "YOUR_ACCESS_KEY_SECRET"  # 请替换为您的阿里云AccessKey Secret
+ region_id: "cn-xxxxxxxxx"  # 请替换为您的资源所在区域ID
+ 
+ # ECS安全组配置
+ ecs:
+   enabled: true
+   security_groups:
+     - security_group_id: "sg-r-xxxxxxxxx"  # 请替换为您的安全组ID
+       port: "-1/-1"  # 支持端口范围配置，如 "22", "80/80", "-1/-1", "1/65535"
+       priority: 99      # 规则优先级
+     - security_group_id: "sg-r-xxxxxxxxx"  # 请替换为您的安全组ID
+       port: "-1/-1"  # 支持端口范围配置，如 "22", "80/80", "-1/-1", "1/65535"
+       priority: 99      # 规则优先级
+   
+ # RDS配置
+ rds:
+   enabled: true
+   instance_whitelists:
+     - instance_id: "rm-xxxxxxxxx"  # 请替换为您的RDS实例ID
+       whitelist_name: "xxxxxxxxx"  # 请替换为您的白名单分组名称
+   
+ # Redis配置
+ redis:
+   enabled: true
+   instance_whitelists:
+     - instance_id: "r-xxxxxxxxx"  # 请替换为您的Redis实例ID
+       whitelist_name: "xxxxxxxxx"  # 请替换为您的白名单分组名称
+   
+ # CLB配置
+ clb:
+   enabled: true
+   load_balancer_whitelists:
+     - acl_id: "acl-xxxxxxxxx"  # 请替换为您的访问控制策略组ID
+     - acl_id: "acl-xxxxxxxxx"  # 请替换为您的访问控制策略组ID
+
+# 多账号配置（推荐使用）
+# accounts:
+# - name: "account1"
+#   access_key_id: "your_access_key_id_1"
+#   access_key_secret: "your_access_key_secret_1"
+#   region_id: "cn-hangzhou"
+  
+#   # ECS安全组配置
+#   ecs:
+#     enabled: true
+#     security_groups:
+#       - security_group_id: "sg-xxxxxxxxx"
+#         port: "22"
+#         priority: 100      # 规则优先级
+    
+#   # RDS配置
+#   rds:
+#     enabled: true
+#     instance_whitelists:
+#       - instance_id: "rm-xxxxxxxxx"
+#         whitelist_name: "default"  # 白名单分组名称
+    
+#   # Redis配置
+#   redis:
+#     enabled: true
+#     instance_whitelists:
+#       - instance_id: "r-xxxxxxxxx"
+#         whitelist_name: "default"  # 白名单分组名称
+    
+#   # CLB配置
+#   clb:
+#     enabled: true
+#     load_balancer_whitelists:
+#       - acl_id: "acl-xxxxxxxxx"  # 访问控制策略组ID
+    
+# - name: "account2"
+#   access_key_id: "your_access_key_id_2"
+#   access_key_secret: "your_access_key_secret_2"
+#   region_id: "cn-shanghai"
+  
+#   # ECS安全组配置
+#   ecs:
+#     enabled: true
+#     security_groups:
+#       - security_group_id: "sg-yyyyyyyyy"
+#         port: "22"
+#         priority: 100
+    
+#   # RDS配置
+#   rds:
+#     enabled: true
+#     instance_whitelists:
+#       - instance_id: "rm-yyyyyyyyy"
+#         whitelist_name: "default"
+    
+#   # Redis配置
+#   redis:
+#     enabled: true
+#     instance_whitelists:
+#       - instance_id: "r-yyyyyyyyy"
+#         whitelist_name: "default"
+    
+#   # CLB配置
+#   clb:
+#     enabled: true
+#     load_balancer_whitelists:
+#       - acl_id: "acl-yyyyyyyyy"
